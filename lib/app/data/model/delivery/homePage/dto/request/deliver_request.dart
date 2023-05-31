@@ -1,17 +1,17 @@
 import 'package:easy_hotel/app/data/model/base_request.dart';
 
-class DeliverOrdersRequestDto extends BaseRequest {
-  DeliverOrdersRequestDto({
-    this.branchId,
-    this.deliverBy,
+class DeliverRequestDto extends BaseRequest {
+  DeliverRequestDto({
+    this.id,
+    this.createdBy,
   });
 
-  int? branchId;
-  int? deliverBy;
+  int? id;
+  int? createdBy;
 
   @override
   Map<String, dynamic> toJson() => {
-    "branchId": branchId,
-    "deliveryInfId": deliverBy,
+    "id": id,
+    "createdBy": createdBy,
   };
 }

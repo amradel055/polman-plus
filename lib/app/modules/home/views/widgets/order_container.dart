@@ -1,6 +1,7 @@
 
 import 'package:easy_hotel/app/components/image_widget.dart';
 import 'package:easy_hotel/app/components/text_widget.dart';
+import 'package:easy_hotel/app/core/utils/user_manager.dart';
 import 'package:easy_hotel/app/core/values/app_colors.dart';
 import 'package:easy_hotel/app/core/values/app_strings.dart';
 import 'package:easy_hotel/app/modules/home/controllers/home_controller.dart';
@@ -10,71 +11,106 @@ import 'package:get/get.dart';
 
 
 
-class SpaReservationPackage extends GetView<HomeController> {
-  const SpaReservationPackage(this.name, this.title, {Key? key}) : super(key: key);
+class OrderContainer extends GetView<HomeController> {
+  const OrderContainer(this.showDetails, this.num, this.time, this.name,  this.i,  {Key? key}) : super(key: key);
+  final bool showDetails;
+  final String num;
+  final String time;
   final String name;
-  final String title;
+  final int i;
+
+
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(top:5, bottom: 10),
-      child: Container(
-        width: size.width*.9,
-        height: size.height*.3,
-        decoration:const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20.00)),color: AppColors.appGreyDark
-        ),
-        child: Column(
-          children:[
-            ImageWidget(path: "https://www.wearegurgaon.com/wp-content/uploads/2022/04/Affinity-Salon-Gurgaon.jpg",width: size.width*.9,
-              height: size.height*.18, fit: BoxFit.cover,
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextWidget(name,weight: FontWeight.bold),
-                      TextWidget(title,weight: FontWeight.bold),
-
-                    ],
+      return  Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Center(
+              child: Container(
+                  width: size.width*.95 ,
+                  // height: size.height*.12,
+                  decoration:const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15)),
+                    color: AppColors.appGreyDark,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:5, right:10),
-                  child: Column(
+                  child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: (){
-                          controller.serviceIndex.value=0;
-
-                        },
-                        child: Container(
-                          height:size.height * 0.055 ,
-                          width: size.width * 0.2,
-                          decoration: BoxDecoration(
-                            color:Colors.white ,
-                            borderRadius: BorderRadius.all( Radius.circular(size.width * 0.05)),
-                          ),
-                          child:const Center(child:  TextWidget(AppStrings.reserve , textAlign: TextAlign.center,weight: FontWeight.bold,)),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:  CircleAvatar(
+                          radius: size.width*.07,
+                          backgroundColor: AppColors.appBlue,
+                          child:
+                           TextWidget(num.toString(),textColor: Colors.white,weight: FontWeight.bold,size: 18,)
+                          ,
                         ),
                       ),
-                      const TextWidget('250 LE',weight: FontWeight.bold)
+                      SizedBox(
+                        width: showDetails ?  size.width*.55:size.width*.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                TextWidget(name,textColor: AppColors.appBlue,weight: FontWeight.bold,size: 13,)
+
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                TextWidget(time.toString(),textColor: AppColors.appBlue,weight: FontWeight.bold,size: 13,)
+
+                              ],
+                            ),
+
+
+
+                          ],
+                        ),
+                      ),
+                      showDetails ?   GestureDetector(
+                        onTap: (){
+                          controller.index.value == 0 ?controller.getDeliver(controller.activeOrders[i].id!, UserManager().user!.id):controller.getFinishDeliver(controller.deliverdOrders[i].id!);
+
+                          },
+                        child: Container(
+
+                          height: size.height * .06,
+                          width: size.width * .13,
+                          decoration:  BoxDecoration(
+                            borderRadius:const  BorderRadius.all(
+                                Radius.circular(50.00)), color:controller.index.value == 0 ?Colors.green:Colors.red,
+                          ),
+                          child:
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children:  [
+                              TextWidget(controller.index.value == 0 ?"Start":"End",weight: FontWeight.bold,textColor: Colors.white,),
+                               // Icon(Icons.shopping_bag,color: Colors.white ),
+                            ],
+                          ),
+
+                        ),
+                      ):const SizedBox()
+
+
+
+
 
                     ],
-                  ),
-                ),
-              ],
-            )
+                  )
 
-          ],
-        ),
-      ),
-    )
-    ;
+
+              ),
+            ),
+          ),
+
+        ],
+      );
+
+
+
+
   }
 
 }
