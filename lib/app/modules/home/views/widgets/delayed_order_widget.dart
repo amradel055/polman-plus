@@ -13,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../../components/app_refresh_indecetor.dart';
+
 
 class DelayedOrdersWidget extends GetView<HomeController> {
   const DelayedOrdersWidget({Key? key})
@@ -31,22 +33,25 @@ class DelayedOrdersWidget extends GetView<HomeController> {
           child: Common.getSpin(),
         );
       }
-      return Obx(() {
-        return Column(
-          children: [
-            for(int i = 0; i < controller.delayedOrders.length; i ++)
-              OrderContainer(
-                  false,
-                  controller.delayedOrders[i].roomNum.toString() ?? "",
-                  controller.delayedOrders[i].remark ?? "No Remarks",
-                  DateFormat('yyyy.MM.dd  hh:mm aaa').format(
-                      controller.delayedOrders[i].dueDate!
-                  ) ??"",
-                  i),
+      return AppRefreshIndicator(
+        onRefresh: () async => await controller.getDelyedOrders(),
+        child: Obx(() {
+          return Column(
+            children: [
+              for(int i = 0; i < controller.delayedOrders.length; i ++)
+                OrderContainer(
+                    false,
+                    controller.delayedOrders[i].roomNum.toString() ?? "",
+                    controller.delayedOrders[i].remark ?? "No Remarks",
+                    DateFormat('yyyy.MM.dd  hh:mm aaa').format(
+                        controller.delayedOrders[i].dueDate!
+                    ) ??"",
+                    i),
 
-          ],
-        );
-      });
+            ],
+          );
+        }),
+      );
     });
   }
 

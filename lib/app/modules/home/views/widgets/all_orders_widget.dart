@@ -13,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../../components/app_refresh_indecetor.dart';
+
 
 class AllOrdersWidget extends GetView<HomeController> {
   const AllOrdersWidget({Key? key})
@@ -33,22 +35,25 @@ class AllOrdersWidget extends GetView<HomeController> {
       }
       return SizedBox(
           width: size.width,
-          child: Obx(() {
-            return Column(
-              children: [
-                for(int i = 0; i < controller.allOrders.length; i ++)
-                  OrderContainer(
-                      false,
-                      controller.allOrders[i].roomNum.toString() ?? "",
-                      controller.allOrders[i].remark?? "No Remarks",
-                      DateFormat('yyyy.MM.dd  hh:mm aaa').format(
-                          controller.allOrders[i].dueDate!
-                      ) ??"",
-                      i),
+          child: AppRefreshIndicator(
+            onRefresh: () async => await controller.getAllOrders(),
+            child: Obx(() {
+              return Column(
+                children: [
+                  for(int i = 0; i < controller.allOrders.length; i ++)
+                    OrderContainer(
+                        false,
+                        controller.allOrders[i].roomNum.toString() ?? "",
+                        controller.allOrders[i].remark?? "No Remarks",
+                        DateFormat('yyyy.MM.dd  hh:mm aaa').format(
+                            controller.allOrders[i].dueDate!
+                        ) ??"",
+                        i),
 
-              ],
-            );
-          })
+                ],
+              );
+            }),
+          )
       );
     });
   }

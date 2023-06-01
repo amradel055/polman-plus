@@ -13,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../../components/app_refresh_indecetor.dart';
+
 
 class DeliveredOrdersWidget extends GetView<HomeController> {
   const DeliveredOrdersWidget({Key? key})
@@ -34,23 +36,26 @@ class DeliveredOrdersWidget extends GetView<HomeController> {
 
         return SizedBox(
             width: size.width,
-            child: Obx(() {
-              return Column(
-                children: [
-                  for(int i = 0; i < controller.deliverdOrders.length; i ++)
-                    OrderContainer(
-                        true,
-                        controller.deliverdOrders[i].roomNum.toString() ?? "",
-                        controller.deliverdOrders[i].remark ?? "No Remarks",
-                        DateFormat('yyyy.MM.dd  hh:mm aaa').format(
-                            controller.deliverdOrders[i].dueDate!
-                           ) ??"",
-                        // DateFormat.yMd( controller.activeOrders[i].time!).add_jm( controller.activeOrders[i].time!) ??"",
-                        i),
+            child: AppRefreshIndicator(
+              onRefresh: () async => await controller.getDeliveredOrders(),
+              child: Obx(() {
+                return Column(
+                  children: [
+                    for(int i = 0; i < controller.deliverdOrders.length; i ++)
+                      OrderContainer(
+                          true,
+                          controller.deliverdOrders[i].roomNum.toString() ?? "",
+                          controller.deliverdOrders[i].remark ?? "No Remarks",
+                          DateFormat('yyyy.MM.dd  hh:mm aaa').format(
+                              controller.deliverdOrders[i].dueDate!
+                             ) ??"",
+                          // DateFormat.yMd( controller.activeOrders[i].time!).add_jm( controller.activeOrders[i].time!) ??"",
+                          i),
 
-                ],
-              );
-            })
+                  ],
+                );
+              }),
+            )
         );
 
     });
