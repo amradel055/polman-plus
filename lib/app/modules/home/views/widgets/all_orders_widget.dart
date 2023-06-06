@@ -6,6 +6,7 @@ import 'package:easy_hotel/app/core/values/app_strings.dart';
 import 'package:easy_hotel/app/modules/home/controllers/home_controller.dart';
 import 'package:easy_hotel/app/modules/home/views/widgets/order_container.dart';
 import 'package:easy_hotel/app/routes/app_pages.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,23 +39,24 @@ class AllOrdersWidget extends GetView<HomeController> {
           child: AppRefreshIndicator(
             onRefresh: () async => await controller.getAllOrders(),
             child: Obx(() {
-              return Column(
-                children: [
-                  for(int i = 0; i < controller.allOrders.length; i ++)
-                    OrderContainer(
-                        false,
-                        controller.allOrders[i].roomNum.toString() ?? "",
-                        controller.allOrders[i].remark?? "No Remarks",
-                        DateFormat('yyyy.MM.dd  hh:mm aaa').format(
-                            controller.allOrders[i].dueDate!
-                        ) ??"",
-                        i),
-
-                ],
+              return ListView.builder(
+                itemCount: controller.allOrders.length,
+                padding: const EdgeInsets.all(4),
+                dragStartBehavior: DragStartBehavior.start,
+                itemBuilder: (context, i) {
+                  final order = controller.allOrders[i];
+                  return OrderContainer(
+                      true,
+                      order.roomNum.toString(),
+                      order.remark ?? "No Remarks",
+                      DateFormat('yyyy.MM.dd  hh:mm aaa')
+                          .format(order.dueDate!) ??
+                          "",
+                      i);
+                },
               );
             }),
-          )
-      );
+          ));
     });
   }
 

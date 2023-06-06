@@ -49,8 +49,8 @@ class HomeView extends GetView<HomeController> {
         ),
         body:
 
-           ListView(
-            padding: EdgeInsets.zero,
+           Column(
+            mainAxisAlignment: MainAxisAlignment.start ,
             children: [
               Container(
                 height: 150.h,
@@ -104,12 +104,15 @@ class HomeView extends GetView<HomeController> {
                     child: Common.getSpin(),
                   );
                 }
-                return [
-                  const ActiveOrdersWidget(),
-                  const DeliveredOrdersWidget(),
-                  const DelayedOrdersWidget(),
-                  const AllOrdersWidget(),
-                ][controller.index.value];
+                return  SizedBox(
+                  height: 550.h,
+                  child: [
+                    const ActiveOrdersWidget(),
+                    const DeliveredOrdersWidget(),
+                    const DelayedOrdersWidget(),
+                    const AllOrdersWidget(),
+                  ][controller.index.value],
+                );
               })
 
 
